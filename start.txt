@@ -1,0 +1,3 @@
+/j /job - Незакрытые проблемы
+/ss - Server status
+/on /off - Alerting mode

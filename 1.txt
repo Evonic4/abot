@@ -1,0 +1,92 @@
+/usr/share/alert_bot/
+
+
+mkdir -p /dev/cache
+chmod 777 /dev/cache
+mount -t tmpfs -o size=100M tmpfs /dev/cache
+mkdir -p /dev/cache/1
+mkdir -p /dev/cache/2
+
+
+
+1.
+@reboot mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 && /usr/share/alert_bot/abot1.sh &
+
+2.
+mkdir -p /usr/share/alert_bot/ && 
+useradd -d /dev/null -G adm -p 12345 -s /bin/bash mastmetric && 
+chown -R mastmetric:mastmetric /usr/share/alert_bot/ && 
+cp -r -f ./logrotate /etc/logrotate.d/ && 
+cp -r -f ./trbot /usr/share/alert_bot/ && 
+chmod +rx /usr/share/alert_bot/setup.sh && 
+/usr/share/alert_bot/setup.sh && 
+
+3.
+crontab -e
+*/1 * * * *  su mastmetric -c '/usr/share/metricz/metricz.sh' -s /bin/bash
+@reboot sleep 60 && rm -f /usr/share/trbot/rtb_pid.txt && su mastmetric -c '/usr/share/trbot/trbot.sh' -s /bin/bash &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/cert.key -out /etc/ssl/cert.crt
+-------------alertmanager----------------
+https://github.com/prometheus/alertmanager/blob/main/docs/configuration.md
+
+настройки:
+global:
+route:
+  group_by: ['по каким параметрам группировать правила']
+  group_wait: время_ожидания_перед_отправкой_уведомления_для_группы
+  group_interval: время_отправки_повторного_сообщения_для_группы
+  repeat_interval: время_до_отправки_повторного_сообщения
+  receiver: 'имя_способа_отправки_сообщений'
+receivers:
+  - name: 'имя_способа_отправки_сообщений'
+    конфигурация
+
+конфиг мыла:
+receivers:
+- name: 'email'
+  email_configs:
+  - to: 'адрес_электронной_почты_получателя'
+    from: 'адрес_электронной_почты_отправителя'
+    smarthost: 'SMTP_хост:порт'
+    auth_username: 'имя_пользователя'
+    auth_identity: 'имя_пользователя'
+    auth_password: 'пароль'
+	
+	
+- alert: название_правила
+    expr: выражение_при_истинности_которого_отправится_алерт
+    for: алерт_будет_отправлен_если_выражение_держится_указанное_время
+    labels:
+      severity: уровень_важности
+    annotations:
+      summary: заголовок_алерта
+      description: "Подробное описание алерта {{ $переменная }}"
+
+#  - alert: high_load
+#    expr: node_load1 > 0.5
+#    for: 2m
+#    labels:
+#      severity: page
+#    annotations:
+#      summary: "Instance {{ $labels.instance }} under high load"
+#      description: "Instance {{ $labels.instance }} under high load"
+
+------------------
