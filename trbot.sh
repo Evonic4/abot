@@ -34,10 +34,9 @@ send1=0
 function logger()		#функция логирования
 {
 local date1=`date '+ %Y-%m-%d %H:%M:%S'`
-echo $date1" trbot2: "$1 >> $log
+echo $date1" trbot: "$1 >> $log
 }
 
-mkdir -p /var/log/trbot
 
 if ! [ -f $log ]; then	#инициализация файла логирования
 echo " " > $log
