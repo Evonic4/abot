@@ -7,6 +7,7 @@ fhome=/usr/share/alert_bot/
 fcache=/dev/cache/1/
 fPID=$fhome"pid1.txt"
 
+[ "$1" -eq "1" ] && fcache=/usr/share/alert_bot/cache/1/
 
 echo "start"
 tm=0

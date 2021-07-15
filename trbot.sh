@@ -6,14 +6,16 @@ fhome=/usr/share/alert_bot/
 fcache1=/dev/cache/1/
 fcache2=/dev/cache/2/
 
+[ "$1" -eq "1" ] && fcache1=/usr/share/alert_bot/cache/1/ && fcache2=/usr/share/alert_bot/cache/2/ && /usr/share/alert_bot/abot1.sh 1 &
+#mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 &&
+
 ftb=$fhome
 cuf=$fhome
 fm=$fhome"mail.txt"
 mass_mesid_file=$fhome"mmid.txt"
 home_trbot=$fhome
 
-[ "$1" -eq "1" ] && /usr/share/alert_bot/abot1.sh &
-#mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 &&
+
 
 function Init2() #инициализация переменных из конфига settings.conf
 {
