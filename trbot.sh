@@ -7,7 +7,7 @@ fcache1=/dev/cache/1/
 fcache2=/dev/cache/2/
 
 echo "1:"$1 
-[ "$1" -eq "1" ] && fcache1=/usr/share/alert_bot/cache/1/ && fcache2=/usr/share/alert_bot/cache/2/ && /usr/share/alert_bot/abot1.sh 1 &
+[ "$1" -eq "1" ] && echo "start abot1" && fcache1=/usr/share/alert_bot/cache/1/ && fcache2=/usr/share/alert_bot/cache/2/ && /usr/share/alert_bot/abot1.sh 1 &
 #mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 &&
 
 ftb=$fhome
