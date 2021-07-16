@@ -7,11 +7,14 @@ change
 /usr/share/settings.conf  
   
 start  
-su mastmetric -c '/usr/share/alert_bot/trbot.sh' -s /bin/bash  
+su mastmetric -c '/usr/share/alert_bot/trbot.sh 2' -s /bin/bash  
   
 log  
 /var/log/trbot/trbot.log  
   
 alertmanager conf  
 /usr/share/alert_bot/alertmanager/config.yml  
+  
+docker  
+cd /usr/share/alert_bot/docker/ && docker-compose up  
   
