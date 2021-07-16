@@ -7,9 +7,10 @@ fhome=/usr/share/alert_bot/
 #fcache2=/dev/cache/2/
 fcache1=/usr/share/alert_bot/cache/1/
 fcache2=/usr/share/alert_bot/cache/2/
+zap=$1
 
-[ "$1" -eq "1" ] && /usr/share/alert_bot/abot1.sh 1 &
-[ "$1" -eq "2" ] && fcache1=/dev/cache/1/ && fcache2=/dev/cache/2/
+[ "$zap" -eq "1" ] && /usr/share/alert_bot/abot1.sh 1 &
+[ "$zap" -eq "2" ] && fcache1=/dev/cache/1/ && fcache2=/dev/cache/2/
 #mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 &&
 
 ftb=$fhome
@@ -40,7 +41,12 @@ send1=0
 function logger()		#функция логирования
 {
 local date1=`date '+ %Y-%m-%d %H:%M:%S'`
-echo $date1" trbot: "$1 >> $log
+
+if [ "$zap" -eq "1" ]; then
+	echo $date1" trbot: "$1
+else
+	echo $date1" trbot: "$1 >> $log
+fi
 }
 
 
