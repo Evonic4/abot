@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+
+  prometheus_bot:
+    build:
+      context: .
+    container_name: alert-bot
+    ports:
+      - 9087:9087
+    volumes:
+      - ./usr/share/alert_bot/docker/settings.conf:/usr/share/alert_bot/settings.conf
