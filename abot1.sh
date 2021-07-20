@@ -5,7 +5,6 @@
 #переменные
 fhome=/usr/share/alert_bot/
 fcache=/dev/cache/1/
-fPID=$fhome"pid1.txt"
 
 [ "$1" -eq "1" ] && fcache=/usr/share/alert_bot/cache/1/
 
@@ -26,8 +25,6 @@ date2=`date '+ %Y-%m-%d %H:%M:%S'`
 chmod +rx -R $fcache
 echo $date2"   "$fcache$tm".txt"
 sleep 0.8
-
-[ "$k" -ge "$kmax" ] && Init && k=0 && echo "k reset"	#реинициализация
 
 done
 

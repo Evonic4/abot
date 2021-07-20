@@ -9,7 +9,6 @@ fcache1=/usr/share/alert_bot/cache/1/
 fcache2=/usr/share/alert_bot/cache/2/
 zap=$1
 
-[ "$zap" -eq "1" ] && /usr/share/alert_bot/abot1.sh 1 &
 [ "$zap" -eq "2" ] && fcache1=/dev/cache/1/ && fcache2=/dev/cache/2/
 #mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 &&
 
@@ -33,6 +32,8 @@ opov=$(sed -n 7"p" $ftb"settings.conf" | tr -d '\r')
 chat_id1=$(sed -n 9"p" $ftb"settings.conf" | tr -d '\r')
 chat_id2=$(sed -n 10"p" $ftb"settings.conf" | tr -d '\r')
 progons=$(sed -n 11"p" $ftb"settings.conf" | tr -d '\r')
+
+last_id=$(sed -n 1"p" $ftb"lastid.txt" | tr -d '\r')
 }
 
 Init2;
@@ -227,8 +228,8 @@ logger "input exit"
 
 lastidrass ()  				#хранитель последнего id ответа от сервера telegram
 {
-if [ "$last_id" -lt "$mi" ]; then
-	last_id=$mi
+if [ "$last_id" -le "$mi" ]; then
+	last_id=$((mi+1))
 	echo $last_id > $ftb"lastid.txt"
 	logger "new last_id="$last_id
 fi
@@ -251,7 +252,7 @@ fi
 for (( i=1;i<=$mi_col;i++)); do
 	i1=$((i-1))
 	mi=$(cat $cuf"in.txt" | jq ".result[$i1].update_id" | tr -d '\r')
-	#logger "update_id="$mi
+	logger "update_id="$mi
 	
 	ffufuf=0
 	for x in `cat $mass_mesid_file|grep -v \#|tr -d '\r'`
@@ -284,6 +285,8 @@ for (( i=1;i<=$mi_col;i++)); do
 	fi
 	
 done
+
+lastidrass;
 }
 
 
@@ -423,6 +426,8 @@ echo $PID > $fPID
 logger "start"
 logger "chat_id1="$chat_id1
 logger "chat_id2="$chat_id2
+
+[ "$zap" -eq "1" ] && /usr/share/alert_bot/abot1.sh 1 &
 
 kkik=0
 

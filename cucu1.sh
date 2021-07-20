@@ -11,8 +11,9 @@ if ! [ -f $fPID ]; then
 PID=$$
 echo $PID > $fPID
 token=$(sed -n 1"p" $ftb"settings.conf" | tr -d '\r')
+last_id=$(sed -n 1"p" $ftb"lastid.txt" | tr -d '\r')
 
-curl -L https://api.telegram.org/bot$token/getUpdates > $cuf"in0.txt"
+curl -L https://api.telegram.org/bot$token/getUpdates?offset=$last_id > $cuf"in0.txt"
 mv $cuf"in0.txt" $cuf"in.txt"
 
 fi
