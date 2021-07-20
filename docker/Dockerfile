@@ -1,11 +1,10 @@
 FROM ubuntu:18.04
-MAINTAINER Evonic4
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Moscow
 
 USER root
 RUN apt update
-RUN apt install -y wget git tar curl netcat jq && \
+RUN apt install -y wget git tar curl netcat jq perl && \
 rm -rf /var/lib/apt/lists/* && \
 apt clean
 
@@ -28,7 +27,8 @@ mkdir -p /usr/share/alert_bot/cache/2; \
 chmod 777 /usr/share/alert_bot/cache;
 
 RUN cd /usr/share/alert_bot/; \
-chmod +x *.sh; \
+perl -pi -e "s/\r\n/\n/" /usr/share/alert_bot/*.sh; \
+chmod +rx /usr/share/alert_bot/*.sh; \
 useradd -d /dev/null -G adm -p 12345 -s /bin/bash mastmetric; \
 chown -R mastmetric:mastmetric /usr/share/alert_bot/; \
 chown -R mastmetric:mastmetric /var/log/trbot;
