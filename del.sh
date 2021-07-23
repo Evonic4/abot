@@ -1,5 +1,4 @@
 #!/bin/bash
-#скрипт удаления алертов по ID
 
 home_trbot=/usr/share/alert_bot/
 fhome=$home_trbot
@@ -8,7 +7,7 @@ echo $iter | tr " " "\n" > $home_trbot"temp_del.txt"
 
 state="ok"
 
-function deleteler() #удаляем непосредственно
+function deleteler() 
 {
 [ "$test" == "all" ] && cat $fhome"alerts.txt" >> $fhome"delete.txt" && rm -f $home_trbot"alerts2.txt" && rm -f $home_trbot"alerts.txt" && touch $home_trbot"alerts2.txt" && touch $home_trbot"alerts.txt" && echo $test" check" && echo "delete all ok" > $home_trbot"del.txt" && exit 0
 
@@ -18,14 +17,14 @@ echo "str_col2="$str_col2
 num=$(grep -n "$test" $fhome"alerts2.txt" | awk -F":" '{print $1}')
 echo "num="$num
 
-if [ -z "$num" ]; then	#алерта нет
+if [ -z "$num" ]; then	
 	state="NOT ok"
 	echo $test" not find"
-else					#алерт есть
+else					
 		state="ok"
 		
 		fp=$(sed -n $num"p" $fhome"alerts.txt" | tr -d '\r')
-		echo $fp >> $fhome"delete.txt"										#заносим в схрон
+		echo $fp >> $fhome"delete.txt"										
 		
 		head -n $((num-1)) $fhome"alerts2.txt" > $fhome"alerts2_tmp.txt"
 		tail -n $((str_col2-num)) $fhome"alerts2.txt" >> $fhome"alerts2_tmp.txt"
@@ -50,7 +49,7 @@ for (( i=1;i<=$str_col;i++)); do
 	deleteler;
 done
 
-echo "delete "$state", jobs now:" > $home_trbot"del.txt"	#формируем сообщение
+echo "delete "$state", jobs now:" > $home_trbot"del.txt"	
 cat $home_trbot"alerts2.txt" >> $home_trbot"del.txt"
 echo "----" >> $home_trbot"del.txt"
 

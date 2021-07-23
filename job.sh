@@ -1,5 +1,4 @@
 #!/bin/bash
-#скрипт обработки команды /job
 
 home_trbot=/usr/share/alert_bot/
 vjob=$home_trbot"job.txt"

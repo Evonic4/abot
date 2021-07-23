@@ -1,8 +1,5 @@
 #!/bin/bash
-#скрипт принимает отправленные менеджером сообщения о тяжести и бренности бытия и преобразует их в понятный язык для телеграмм-бота
 
-
-#переменные
 fhome=/usr/share/alert_bot/
 fcache=/dev/cache/1/
 
@@ -14,7 +11,7 @@ k=0;
 
 [ -f $fhome"tm.txt" ] && tm=$(sed -n 1"p" $fhome"tm.txt" | tr -d '\r')
 
-while true #основной цикл
+while true 
 do
 k=$((k+1))
 tm=$((tm+1))

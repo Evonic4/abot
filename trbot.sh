@@ -1,16 +1,12 @@
 #!/bin/bash
-#основной скрипт телеграм-бота
 
-#переменные
+
 fhome=/usr/share/alert_bot/
-#fcache1=/dev/cache/1/
-#fcache2=/dev/cache/2/
 fcache1=/usr/share/alert_bot/cache/1/
 fcache2=/usr/share/alert_bot/cache/2/
 zap=$1
 
 [ "$zap" -eq "2" ] && fcache1=/dev/cache/1/ && fcache2=/dev/cache/2/
-#mkdir -p /dev/cache && chmod 777 /dev/cache && mount -t tmpfs -o size=100M tmpfs /dev/cache && mkdir -p /dev/cache/1 && mkdir -p /dev/cache/2 &&
 
 ftb=$fhome
 cuf=$fhome
@@ -20,7 +16,7 @@ home_trbot=$fhome
 
 
 
-function Init2() #инициализация переменных из конфига settings.conf
+function Init2() 
 {
 logger "text="
 log=$(sed -n 2"p" $ftb"settings.conf" | tr -d '\r')
@@ -39,19 +35,19 @@ last_id=$(sed -n 1"p" $ftb"lastid.txt" | tr -d '\r')
 Init2;
 send1=0
 
-function logger()		#функция логирования
+function logger()	
 {
 local date1=`date '+ %Y-%m-%d %H:%M:%S'`
 
 if [ "$zap" -eq "1" ]; then
-	echo $date1" trbot: "$1
+	echo $date1" abot: "$1
 else
-	echo $date1" trbot: "$1 >> $log
+	echo $date1" abot: "$1 >> $log
 fi
 }
 
 
-if ! [ -f $log ]; then	#инициализация файла логирования
+if ! [ -f $log ]; then
 echo " " > $log
 else
 echo " " >> $log
@@ -60,7 +56,7 @@ fi
 
 
 
-regstat()	#функция смены настроек Alerting mode в конфигурационном файле
+regstat()	
 {
 str_col=$(grep -cv "^T" $ftb"settings.conf")
 echo "str_col="$str_col
@@ -85,7 +81,7 @@ cp -f $ftb"settings1.conf" $ftb"settings.conf"
 }
 
 
-roborob ()  		#функция выполнения команд боту
+roborob ()  	
 {
 date1=`date '+ %d.%m.%Y %H:%M:%S'`
 logger "text="$text
@@ -128,7 +124,7 @@ logger "roborob otv="$otv
 }
 
 
-send ()  		#функция отправки ответа в чат
+send ()  	
 {
 logger "send start"
 rm -f $cuf"send.txt"
@@ -144,7 +140,6 @@ if [ "$send1" -eq "2" ]; then
 fi
 
 
-#chat_id1=$(sed -n "1p" $frecid | sed 's/z/-/g' | tr -d '\r')
 logger "chat_id="$chat_id
 		echo $chat_id > $cuf"send.txt"
 		echo $otv >> $cuf"send.txt"
@@ -155,14 +150,14 @@ $ftb"cucu2.sh" &
 pauseloop;
 
 if [ -f $cuf"out.txt" ]; then
-	if [ "$(cat $cuf"out.txt" | grep ":true,")" ]; then		#ответ отправлен
+	if [ "$(cat $cuf"out.txt" | grep ":true,")" ]; then		
 		logger "send OK"
 	else
 		logger "send file+, timeout.."
 		cat $cuf"out.txt" >> $log
 		sleep 2
 	fi
-else														#ответ не отправлен
+else														
 	logger "send FAIL"
 	if [ -f $cuf"cu2_pid.txt" ]; then
 		logger "send kill cucu2"
@@ -176,7 +171,7 @@ fi
 logger "send exit"
 }
 
-pauseloop ()  		#функция сна на $sec сек
+pauseloop ()  		
 {
 sec1=0
 rm -f $file
@@ -192,7 +187,7 @@ fi
 done
 }
 
-input ()  		#функция получения данных с сервера telegram
+input ()  		
 {
 logger "input start"
 
@@ -202,7 +197,7 @@ $ftb"cucu1.sh" &
 pauseloop;
 
 if [ -f $cuf"in.txt" ]; then
-	if [ "$(cat $cuf"in.txt" | grep ":true,")" ]; then		#ответ получен
+	if [ "$(cat $cuf"in.txt" | grep ":true,")" ]; then		
 		logger "input OK"
 	else
 		logger "input file+, timeout.." #error_code
@@ -210,7 +205,7 @@ if [ -f $cuf"in.txt" ]; then
 		ffufuf1=1
 		sleep 2
 	fi
-else														#ответ не получен
+else														
 	logger "input FAIL"
 	if [ -f $cuf"cu1_pid.txt" ]; then
 		logger "input kill cucu1"
@@ -226,7 +221,7 @@ logger "input exit"
 }
 
 
-lastidrass ()  				#хранитель последнего id ответа от сервера telegram
+lastidrass ()  				
 {
 if [ "$last_id" -le "$mi" ]; then
 	last_id=$((mi+1))
@@ -237,7 +232,7 @@ fi
 }
 
 
-parce ()					#функция парсинга ответов от сервера telegram
+parce ()					
 {
 logger "parce"
 date1=`date '+ %d.%m.%Y %H:%M:%S'`
@@ -275,11 +270,9 @@ for (( i=1;i<=$mi_col;i++)); do
 			echo $text > $home_trbot"t.txt"
 			roborob;
 			
-			#lastidrass;
 			logger "parce ok"
 			echo $mi >> $mass_mesid_file
 		else
-			#lastidrass;
 			logger "parce dont! chat_id="$chat_id" NOT OK"
 		fi
 	fi
@@ -290,7 +283,7 @@ lastidrass;
 }
 
 
-function gen_id_alert() #генератор UUID для проблем
+function gen_id_alert() 
 {
 
 oldid=$(sed -n 1"p" $fhome"id.txt" | tr -d '\r')
@@ -299,7 +292,7 @@ echo $newid > $fhome"id.txt"
 
 }
 
-function redka() #выдергиваем проблемы из сообщений менеджера
+function redka() 
 {
 logger "start redka"
 logger $fcache2$test
@@ -309,23 +302,18 @@ rm -f $f_send
 
 for (( i1=$((num_alerts-1));i1>=0;i1--)); do
 desc=`cat $fcache2$test | jq '.alerts['${i1}'].annotations.description' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
-#alertname=`cat $fcache2$test | jq '.alerts['${i1}'].labels.alertname' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
-#instance=`cat $fcache2$test | jq '.alerts['${i1}'].labels.instance' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
 status=`cat $fcache2$test | jq '.alerts['${i1}'].status' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
 finger=`cat $fcache2$test | jq '.alerts['${i1}'].fingerprint' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 logger $i1
 logger "finger="$finger
 logger "desc="$desc
-#echo "alertname="$alertname
-#echo "instance="$instance
 logger "status="$status
 
 
 num=$(grep -n "$finger" $fhome"alerts.txt" | awk -F":" '{print $1}')
 logger "num="$num
 
-#if ! [ "$(grep "$finger" $fhome"alerts.txt")" ]; then
 if [ -z "$num" ]; then
 	logger "-"
 	if ! [ "$(grep $finger $fhome"delete.txt")" ]; then
@@ -369,7 +357,7 @@ to_send;
 
 
 
-function alert_bot() #проверка поступления алертов от менеджера
+function alert_bot() 
 {
 
 logger "alert_bot checks"
@@ -397,15 +385,15 @@ logger "alert_bot checks ok"
 }
 
 
-function to_send() #подготовка сообщений к отправке в телегу
+function to_send() 
 {
 logger "start to_send"
 
-if ! [ -f $f_send ]; then							#нет данных для опопвещения в чат
+if ! [ -f $f_send ]; then							
 	chat_id1=$(sed -n 9"p" $ftb"settings.conf" | tr -d '\r')
 else 
 	if [ "$regim" -eq "1" ]; then
-		logger "regim ON"												#есть данные для опопвещения в чат	
+		logger "regim ON"													
 		chat_id2=$(sed -n 10"p" $ftb"settings.conf" | sed 's/z/-/g' | tr -d '\r')
 		otv=$f_send
 		logger "chat alert chat_id="$chat_id2", otv="$otv
@@ -419,7 +407,7 @@ fi
 
 
 
-if ! [ -f $fPID ]; then	#старт скрипта
+if ! [ -f $fPID ]; then
 PID=$$
 echo $PID > $fPID
 
@@ -451,10 +439,10 @@ kkik=$(($kkik+1))
 done
 
 
-else #скрипт уже запущен
+else 
 	logger "pid up exit"
 
-fi #конец фильма2
+fi
 
 
 rm -f $fPID

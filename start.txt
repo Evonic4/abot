@@ -1,3 +1,4 @@
 /j /job - Незакрытые проблемы
 /ss - Server status
 /d /del - del id
+/on /off Alerting mode

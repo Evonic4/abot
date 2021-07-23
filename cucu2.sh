@@ -1,8 +1,5 @@
 #!/bin/bash
-#отправка сообщений телеграм-бота в чат
 
-
-#переменные
 ftb=/usr/share/alert_bot/
 cuf=/usr/share/alert_bot/
 fPID=/usr/share/alert_bot/cu2_pid.txt
