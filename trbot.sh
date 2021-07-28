@@ -323,6 +323,7 @@ if [ -z "$num" ]; then
 		gen_id_alert;
 		echo $newid" "$desc >> $fhome"alerts2.txt"
 		echo "[ALERT] "$newid" "$desc >> $f_send
+		to_send;
 	fi
 	else
 	logger "finger "$finger" already removed earlier"
@@ -346,12 +347,13 @@ else
 		cp -f $fhome"alerts_tmp.txt" $fhome"alerts.txt"
 		
 		echo "[OK] "$desc1 >> $f_send
+		to_send;
 	fi
 fi
 
 done
 
-to_send;
+#to_send;
 
 }
 
