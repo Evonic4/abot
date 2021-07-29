@@ -44,7 +44,14 @@ echo "alert_bot checks ok"
 
 }
 
+function gen_id_alert() 
+{
 
+oldid=$(sed -n 1"p" $fhome"id.txt" | tr -d '\r')
+newid=$((oldid+1))
+echo $newid > $fhome"id.txt"
+
+}
 
 function redka() #выдергиваем проблемы из сообщений менеджера
 {
