@@ -21,7 +21,7 @@ nc -l -p 9087 > $fcache$tm".txt"
 date2=`date '+ %Y-%m-%d %H:%M:%S'`
 chmod +rx -R $fcache
 echo $date2"   "$fcache$tm".txt"
-sleep 0.8
+sleep 1
 
 done
 

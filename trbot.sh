@@ -77,6 +77,8 @@ done
 otv="/usr/share/alert_bot/regim.txt"
 send1=1; send;
 
+echo $regim > $ftb"amode.txt"
+
 cp -f $ftb"settings1.conf" $ftb"settings.conf"
 }
 
@@ -319,100 +321,6 @@ echo $newid > $fhome"id.txt"
 
 }
 
-function redka() 
-{
-logger "start redka"
-logger $fcache2$test
-logger "num_alerts="$num_alerts
-
-rm -f $f_send
-
-for (( i1=$((num_alerts-1));i1>=0;i1--)); do
-desc=`cat $fcache2$test | jq '.alerts['${i1}'].annotations.description' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
-status=`cat $fcache2$test | jq '.alerts['${i1}'].status' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
-finger=`cat $fcache2$test | jq '.alerts['${i1}'].fingerprint' | sed 's/"/ /g' | sed 's/^[ \t]*//;s/[ \t]*$//'`
-
-logger $i1
-logger "finger="$finger
-logger "desc="$desc
-logger "status="$status
-
-
-num=$(grep -n "$finger" $fhome"alerts.txt" | awk -F":" '{print $1}')
-logger "num="$num
-
-if [ -z "$num" ]; then
-	logger "-"
-	if ! [ "$(grep $finger $fhome"delete.txt")" ]; then
-	if [ "$status" == "firing" ]; then
-		logger "-1"
-		echo "$finger" >> $fhome"alerts.txt"
-		gen_id_alert;
-		echo $newid" "$desc >> $fhome"alerts2.txt"
-		echo "[ALERT] "$newid" "$desc >> $f_send
-		to_send;
-	fi
-	else
-	logger "finger "$finger" already removed earlier"
-	fi
-else
-	logger "+"
-	if [ "$status" == "resolved" ]; then
-		logger "+1"
-		
-		str_col2=$(grep -cv "^#" $fhome"alerts.txt")
-		logger "str_col2="$str_col2
-		
-		
-		desc1=$(sed -n $num"p" $fhome"alerts2.txt" | tr -d '\r')
-		
-		head -n $((num-1)) $fhome"alerts2.txt" > $fhome"alerts2_tmp.txt"
-		tail -n $((str_col2-num)) $fhome"alerts2.txt" >> $fhome"alerts2_tmp.txt"
-		cp -f $fhome"alerts2_tmp.txt" $fhome"alerts2.txt"
-		
-		grep -v "$finger" $fhome"alerts.txt" > $fhome"alerts_tmp.txt"
-		cp -f $fhome"alerts_tmp.txt" $fhome"alerts.txt"
-		
-		echo "[OK] "$desc1 >> $f_send
-		to_send;
-	fi
-fi
-
-done
-
-#to_send;
-
-}
-
-
-
-function alert_bot() 
-{
-
-logger "alert_bot checks"
-
-#chmod +rx -R $fcache1
-find $fcache1 -maxdepth 1 -type f -name '*.txt' | sort > $fhome"a.txt"
-str_col=$(grep -cv "^#" $fhome"a.txt")
-logger "str_col="$str_col
-
-for (( i=1;i<=$str_col;i++)); do
-test=`basename $(sed -n $i"p" $fhome"a.txt" | tr -d '\r')`
-head -n 7 $fcache1$test | tail -n 1 | jq '' > $fcache2$test
-logger $fcache2$test" ok"
-cat $fcache2$test
-
-rm -f $fcache1$test
-num_alerts=`grep -c description $fcache2$test`
-redka;
-
-rm -f $fcache2$test
-done
-
-logger "alert_bot checks ok"
-
-}
-
 
 function to_send() 
 {
@@ -443,9 +351,13 @@ echo $PID > $fPID
 logger "start"
 logger "chat_id1="$chat_id1
 logger "chat_id2="$chat_id2
+
+echo $regim > $ftb"amode.txt"
+
 otv="/usr/share/alert_bot/start.txt"; send1=1; send;
 
 [ "$zap" -eq "1" ] && /usr/share/alert_bot/abot1.sh 1 &
+[ "$zap" -eq "1" ] && /usr/share/alert_bot/abot2.sh 1 &
 
 kkik=0
 
@@ -455,9 +367,7 @@ sec4=$(sed -n "8p" $ftb"settings.conf" | tr -d '\r')
 sleep $sec4
 ffufuf1=0
 
-#---------------------
-alert_bot;
-#---------------------
+
 to_send;
 
 input;
