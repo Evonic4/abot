@@ -88,7 +88,7 @@ logger "text="$text
 otv=""
 
 if [ "$text" = "/start" ] || [ "$text" = "/?" ] || [ "$text" = "/help" ] || [ "$text" = "/h" ]; then
-	otv="/usr/share/alert_bot/start.txt"
+	otv="/usr/share/alert_bot/help.txt"
 	send1=1; send;
 fi
 
@@ -124,7 +124,43 @@ logger "roborob otv="$otv
 }
 
 
-send ()  	
+send1 () 
+{
+
+logger "send1 start"
+
+echo $chat_id > $cuf"send.txt"
+echo $otv >> $cuf"send.txt"
+
+rm -f $cuf"out.txt"
+file=$cuf"out.txt"; 
+$ftb"cucu2.sh" &
+pauseloop;
+
+if [ -f $cuf"out.txt" ]; then
+	if [ "$(cat $cuf"out.txt" | grep ":true,")" ]; then	
+		logger "send OK"
+	else
+		logger "send file+, timeout.."
+		cat $cuf"out.txt" >> $log
+		sleep 2
+	fi
+else	
+	logger "send FAIL"
+	if [ -f $cuf"cu2_pid.txt" ]; then
+		logger "send kill cucu2"
+		cu_pid=$(sed -n 1"p" $cuf"cu2_pid.txt" | tr -d '\r')
+		killall cucu2.sh
+		kill -9 $cu_pid
+		rm -f $cuf"cu2_pid.txt"
+	fi
+fi
+
+logger "send1 exit"
+
+}
+
+send ()
 {
 logger "send start"
 rm -f $cuf"send.txt"
@@ -138,35 +174,26 @@ if [ "$send1" -eq "2" ]; then
 		chat_id=$chat_id1
 
 fi
-
-
 logger "chat_id="$chat_id
-		echo $chat_id > $cuf"send.txt"
-		echo $otv >> $cuf"send.txt"
 
-rm -f $cuf"out.txt"
-file=$cuf"out.txt"; 
-$ftb"cucu2.sh" &
-pauseloop;
-
-if [ -f $cuf"out.txt" ]; then
-	if [ "$(cat $cuf"out.txt" | grep ":true,")" ]; then		
-		logger "send OK"
-	else
-		logger "send file+, timeout.."
-		cat $cuf"out.txt" >> $log
-		sleep 2
-	fi
-else														
-	logger "send FAIL"
-	if [ -f $cuf"cu2_pid.txt" ]; then
-		logger "send kill cucu2"
-		cu_pid=$(sed -n 1"p" $cuf"cu2_pid.txt" | tr -d '\r')
-		killall cucu2.sh
-		kill -9 $cu_pid
-		rm -f $cuf"cu2_pid.txt"
-	fi
+dl=$(wc -m $otv | awk '{ print $1 }')
+echo "dl="$dl
+if [ "$dl" -gt "4000" ]; then
+	sv=$(echo "$dl/4000" | bc)
+	echo "sv="$sv
+	$ftb"rex.sh" $otv
+	
+	for (( i=1;i<=$sv;i++)); do
+		otv="/usr/share/alert_bot/rez"$i".txt"
+		send1;
+		rm -f "/usr/share/alert_bot/rez"$i".txt"
+	done
+	
+else
+	send1;
 fi
+
+
 
 logger "send exit"
 }
@@ -416,6 +443,7 @@ echo $PID > $fPID
 logger "start"
 logger "chat_id1="$chat_id1
 logger "chat_id2="$chat_id2
+otv="/usr/share/alert_bot/start.txt"; send1=1; send;
 
 [ "$zap" -eq "1" ] && /usr/share/alert_bot/abot1.sh 1 &
 

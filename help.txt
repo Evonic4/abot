@@ -1,0 +1,4 @@
+/j /job - Unresolved issues 
+/ss - Server status
+/d /del - delete id
+/on /off Alerting mode (on-quiet mode)
