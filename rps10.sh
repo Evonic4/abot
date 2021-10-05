@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fhome=/root/scripts/
+fhome=/usr/share/alert_bot/
 
 promapi=$(sed -n 13"p" $fhome"settings.conf" | tr -d '\r')
 
