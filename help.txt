@@ -1,6 +1,0 @@
-/j /job - Unresolved issues 
-/ss - Server status
-/d /del - delete id
-/on /off Alerting mode (off-quiet mode)
-/rps - number of requests per second by service /rps:M (2-def,5,10,30 m)
-/err - number of errors in elastic  /err:M (2-def,5,10,30 m)
