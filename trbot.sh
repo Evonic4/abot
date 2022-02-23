@@ -362,7 +362,8 @@ ffufuf1=0
 to_send;
 
 input;
-parce;
+
+[ "$opov" -eq "0" ] && parce;
 
 kkik=$(($kkik+1))
 [ "$kkik" -eq "$progons" ] && Init2
